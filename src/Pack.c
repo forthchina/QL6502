@@ -63,8 +63,7 @@ static unsigned char mask_bit[] = {
 static unsigned char src_buf[BUFFER_SIZE + 16], dst_buf[BUFFER_SIZE + 16];
 static int addr;
 
-static int unpack_mask0(int code)
-{
+ static int unpack_mask0(int code) {
 	unsigned int m;
 
 	switch (code & 0x5a) {
@@ -84,13 +83,14 @@ static int unpack_mask0(int code)
 		case 0x52:	m = 0x02;	break;
 		case 0x58:	m = 0x40;	break;
 		case 0x5a:  m = 0x00;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	
+			printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
 	}
 	return m;
 }
 
-static int pack_mask0(int code)
-{
+static int pack_mask0(int code) {
 	unsigned int m ;
 
 	switch(code & 0x5a) {
@@ -110,14 +110,15 @@ static int pack_mask0(int code)
 		case 0x52 :		m = 0x10 ;	break ;
 		case 0x58 :		m = 0x08 ;	break ;
 		case 0x5a :     m = 0x00 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
-
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr) ;
+			break;
   	}
   	return m ;
 }
 
-static int unpack_mask1(int code)
-{
+static int unpack_mask1(int code) {
+
 	unsigned int m;
 
 	switch (code & 0x5a) {
@@ -137,13 +138,15 @@ static int unpack_mask1(int code)
 		case 0x52:	m = 0x52;	break;
 		case 0x58:	m = 0x4a;	break;
 		case 0x5a:  m = 0x42;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	
+			printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
+
 	}
 	return m;
 }
 
-static int pack_mask1(int code)
-{
+static int pack_mask1(int code) {
 	unsigned int m ;
 
 	switch(code & 0x5a) {
@@ -163,13 +166,14 @@ static int pack_mask1(int code)
 		case 0x52 :		m = 0x52 ;	break ;
 		case 0x58 :		m = 0x10 ;	break ;
 		case 0x5a :     m = 0x50 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr);
+			break;
   	}
   	return m ;
 }
 
-static int unpack_mask4(int code)
-{
+static int unpack_mask4(int code) {
 	unsigned int m;
 
 	switch (code & 0x5a) { 
@@ -189,13 +193,14 @@ static int unpack_mask4(int code)
 		case 0x52:	m = 0x00;	break;
 		case 0x58:	m = 0x12;	break;
 		case 0x5a:  m = 0x02;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	
+			printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
 	}
 	return m;
 }
 
-static int pack_mask4(int code)
-{
+static int pack_mask4(int code) {
 	unsigned int m ;
 
 	switch(code & 0x5a) {
@@ -215,13 +220,14 @@ static int pack_mask4(int code)
 		case 0x52 :		m = 0x18 ;	break ;
 		case 0x58 :		m = 0x00 ;	break ;
 		case 0x5a :		m = 0x08 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr);
+			break;
   	}
   	return m ;
 }
 
-static int unpack_mask5(int code)
-{
+static int unpack_mask5(int code) {
 	unsigned int m;
 
 	switch (code & 0x5a) {
@@ -241,7 +247,8 @@ static int unpack_mask5(int code)
 		case 0x52:	m = 0x50;	break;
 		case 0x58:	m = 0x00;	break;
 		case 0x5a:  m = 0x40;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
 	}
 	return m;
 }
@@ -267,13 +274,14 @@ static int pack_mask5(int code)
 		case 0x52 :		m = 0x12 ;	break ;
 		case 0x58 :		m = 0x42 ;	break ;
 		case 0x5a :     m = 0x02 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr);
+			break;
 	}
 	return m ;
 }
 
-static int unpack_mask_g1(int code)
-{
+static int unpack_mask_g1(int code) {
 	unsigned int m;
 
 	switch (code & 0x5a) {
@@ -293,13 +301,14 @@ static int unpack_mask_g1(int code)
 		case 0x52:	m = 0x42;	break;
 		case 0x58:	m = 0x0a;	break;
 		case 0x5a:  m = 0x02;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	
+			printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
 	}
 	return m;
 }
 
-static int pack_mask_g1(int code)
-{
+static int pack_mask_g1(int code) {
 	unsigned int m ;
 
 	switch(code & 0x5a) {
@@ -319,13 +328,14 @@ static int pack_mask_g1(int code)
 		case 0x52 :		m = 0x12 ;	break ;
 		case 0x58 :		m = 0x00 ;	break ;
 		case 0x5a :     m = 0x10 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr);
+			break;
 	}
 	return m ;
 }
 
-static int unpack_mask_g2(int code)
-{
+static int unpack_mask_g2(int code) {
 	unsigned int m;
 
 	switch (code & 0x5a) {
@@ -345,13 +355,14 @@ static int unpack_mask_g2(int code)
 		case 0x52:	m = 0x0a;	break;
 		case 0x58:	m = 0x18;	break;
 		case 0x5a:  m = 0x08;	break;
-		default: 	printf("Error At Address : L_%04X\n", addr);	exit(-1);
+		default: 	
+			printf("Error At Address : L_%04X\n", addr);	
+			exit(-1);
 	}
 	return m;
 }
 
-static int pack_mask_g2(int code)
-{
+static int pack_mask_g2(int code) {
 	unsigned int m ;
 
 	switch(code & 0x5a) {
@@ -371,13 +382,14 @@ static int pack_mask_g2(int code)
 		case 0x52 :		m = 0x00 ;	break ;
 		case 0x58 :		m = 0x18 ;	break ;
 		case 0x5a :     m = 0x10 ;	break ;
-		default   : 	printf("Error At Address : L_%04X\n", addr) ;
+		default   : 	
+			printf("Error At Address : L_%04X\n", addr);
+			break;	
 	}
 	return m ;
 }
 
-static int get_m2367(unsigned int addr)
-{
+static int get_m2367(unsigned int addr) {
 	int hi, low, off, byte;
 
 	hi	= (addr & 0x38) >> 3;	
@@ -387,40 +399,35 @@ static int get_m2367(unsigned int addr)
 	return (byte & mask_bit[low]);
 }
 
-static void unpack_proc_2367(unsigned int begin)
-{
+static void unpack_proc_2367(unsigned int begin) {
 	unsigned int i, flag;
 
 	for (addr = begin, i = 0; i <= 0x0fff; i++) {
 		flag = get_m2367(addr);
 		if (flag) {
 			src_buf[addr] = (src_buf[addr] & 0xa5) | unpack_mask_g2(src_buf[addr]);
-		}
-		else {
+		} else {
 			src_buf[addr] = (src_buf[addr] & 0xa5) | unpack_mask_g1(src_buf[addr]);
 		}
-		addr++;
+		addr ++;
 	}
 }
 
-static void pack_proc_2367(unsigned int begin)
-{
+static void pack_proc_2367(unsigned int begin) {
 	unsigned int i, flag;
 
 	for (addr = begin, i = 0; i <= 0x0fff; i++) {
 		flag = get_m2367(addr);
 		if (flag) {
 			src_buf[addr] = (src_buf[addr] & 0xa5) | pack_mask_g2(src_buf[addr]);
-		}
-		else {
+		} else {
 			src_buf[addr] = (src_buf[addr] & 0xa5) | pack_mask_g1(src_buf[addr]);
 		}
-		addr++;
+		addr ++;
 	}
 }
 
-static void unpack_2000(void)
-{
+static void unpack_2000(void) {
 	unsigned int addr;
 
 	for (addr = 0; addr <= 0x0fff; addr++) {
@@ -446,8 +453,7 @@ static void unpack_2000(void)
 	memmove(dst_buf, src_buf, 0x8000);
 }
 
-static void pack_2000(void)
-{
+static void pack_2000(void) {
 	unsigned int addr ;
 
 	for (addr = 0 ; addr <= 0x0fff; addr ++)
@@ -680,20 +686,15 @@ static void image_pack(char * src_name, char * dst_name) {
 void Pack(char * op, char * src, char * dst) {
 	if (strcmp(op, "-p1") == 0) {
 		Pack_ROM_2000(src, dst);
-	}
-	else if (strcmp(op, "-p2") == 0) {
+	} else if (strcmp(op, "-p2") == 0) {
 		Pack_ROM_27512(src, dst);
-	}
-	else  if (strcmp(op, "-u1") == 0) {
+	} else  if (strcmp(op, "-u1") == 0) {
 		UnPack_ROM_2000(src, dst);
-	}
-	else if (strcmp(op, "-u2") == 0) {
+	} else if (strcmp(op, "-u2") == 0) {
 		UnPack_ROM_27512(src, dst);
-	}
-	else if (strcmp(op, "-img") == 0) {
+	} else if (strcmp(op, "-img") == 0) {
 		image_pack(src, dst);
-	}
-	else {
+	} else {
 		printf("Unknown command : %s\n", op);
 	}
 }

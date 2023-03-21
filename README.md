@@ -16,7 +16,7 @@ The QL6502 serves as a summary and memorial to the early development process as 
 
 QL6502 achieves assembly and disassembly functions for CPU 6502.
 
-Usually an existing game program (firmware) for re-development and functional expansion, we must first understand the function of the original program. if we have no source code, the disassembly becomes the only resonable way. In early times, the code running on 8-bits processor is simple or less features, the source code itself is written in assembly language, so the disassembly analysis is relatively effective. Of course, as processors become more powerful and firmware functions become more and more complex, modern firmware is written in high-level languages ​​such as C, and the way in which the algorithms are implemented has been detached from assembly and machine language, and the code is beyond recognition fater compiled or optimization. At this situation, disassembly is basically impossible, so the modern method we are used is usually "forward development".
+Usually an existing game program (firmware) for re-development and functional expansion, we must first understand the function of the original program. if we have no source code, the disassembly becomes the only resonable way. In early times, the code running on 8-bits processor is simple or less features, the source code itself is written in assembly language, so the disassembly analysis is relatively effective. Of course, as processors become more powerful and firmware functions become more and more complex, modern firmware is written in high-level languages such as C, and the way in which the algorithms are implemented has been detached from assembly and machine language, and the code is beyond recognition fater compiled or optimization. At this situation, disassembly is basically impossible, so the modern method we are used is usually "forward development".
 
 The image file of a machine code contains the code and data. The function of disassembly is converting the binary code into an assembly mnemonic. But a stupid one-to-one translation does not meet the needs of our analysis either because translating the data into invalid mnemonics (marked with ???) or setting the half-word of the instruction as a jump entry results in only "junk code". In the era of a simple text editor, this kind of fault meant printing multiple, pointless source lists.
 
@@ -37,7 +37,9 @@ At the beginning of the CAXD6502 design, we implemented a complex expression com
 
 The QL6502 implements the CODE directive. use
 
-    CODE start end      ; like CODE 0x1234 0x5678
+``` 
+        CODE start end      ; like CODE 0x1234 0x5678
+```
 
 To define an area where user extension code can be placed (it has been analyzed before to confirm that the area is blank, invalid data area, etc.) and the subsequent code is placed sequentially in this area. Subsequent source files for a project can continue with code assembly by using only a CODE pseudo-instruction without parameters. If the user assembly code exceeds the defined area, an assembly error report is generated and the assembly is stopped.
 
@@ -45,7 +47,9 @@ To define an area where user extension code can be placed (it has been analyzed 
 
 The QL6502 now is compiled and implemented on Windows 7 64bits, Linux, Mac OS X using the GCC compiler. Use a well-defined makefile
 
-    MAKE
+``` bash
+make
+``` 
 
 The corresponding executable will be generated in the bin directory.
 
@@ -55,45 +59,57 @@ The corresponding executable will be generated in the bin directory.
 
 Start the QL6502 in the Windows Command Window, Linux Command Line, Mac OS X Terminal Window.
 
-    D: \ QL6502 \ Testcase> .. \ obj \ QL6502.exe -X
-    CA6502 V4.0 An Assembly Development Tool for 6502
-    fortchina@163.com, 2017.07 - 2017.07, ALL RIGHTS RESERVED
+``` terminal
+D:\QL6502\Testcase>..\obj\QL6502.exe -X
+CA6502 V4.0 An Assembly Development Tool for 6502
+fortchina@163.com, 2017.07 - 2017.07, ALL RIGHTS RESERVED
 
-    This Program is based on CA6502 V3.0, Zhao Yu, Zhang WenCui, 1993.05 - 2004.09
+This Program is based on CA6502 V3.0, Zhao Yu, Zhang WenCui, 1993.05 - 2004.09
 
-    QL6502>
+QL6502>
+
+```
 
 You can now enter the command after the prompt 'QL6502>', the command is a single letter, case-insensitive. You can use ? for help.
 
 We can try to load an image file named 'ldt512.bin', this process is easy and almost no need to think about:
 
-    QL6502> ldt512.bin
-    65536 Bytes data read into code buffer @ 0x0000
+``` terminal
+QL6502> ldt512.bin
+65536 Bytes data read into code buffer @ 0x0000
+```
 
-The 6502's total addressing space is 64K bytes, but in real systems it certainly can not all be machine code. There  is a lot of memory space for I / O address mapping. We call areas outside the code "invalid areas." Before analyzing, we need to identify these areas. This should be a very complex process that may require repeated analysis of the hardware circuitry and firmware code to determine:
+The 6502's total addressing space is 64K bytes, but in real systems it certainly can not all be machine code. There is a lot of memory space for I/O address mapping. We call areas outside the code "invalid areas." Before analyzing, we need to identify these areas. This should be a very complex process that may require repeated analysis of the hardware circuitry and firmware code to determine:
 
-    QL6502> b 0x0000 0x3fff
-    QL6502> b 0x8000 0xbfff
-    QL6502> b
-    000000 - 003FFF: Not Used
-    004000 - 007FFF: Used
-    008000 - 00BFFF: Not Used
-    00C000 - 010000: Used
-    QL6502>
+``` terminal
+QL6502> b 0x0000 0x3fff
+QL6502> b 0x8000 0xbfff
+QL6502> b
+000000 - 003FFF: Not Used
+004000 - 007FFF: Used
+008000 - 00BFFF: Not Used
+00C000 - 010000: Used
+QL6502>
+```
 
 We use the X command for static analysis
 
-    QL6502> x
+``` terminal
+QL6502> x
     1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
     1 Indirect Entries
+```
 
 QL6502 reports it encountered an indirect jump instruction, we use the i command to view
 
-    QL6502> i
-    (001) L_D425: JMP (0x0030)
+``` terminal
+QL6502> i
+(001) L_D425: JMP (0x0030)
+```
 
 So we look at the code associated with this command, the u command is for disassembly, which basically is a "dumb translation," so we can set the address to the front of the prompt above.
 
+```
     QL6502> u 0xd410
     L_D41A  BD 7B D9                LDA  L_D97B,X
     L_D41D  85 30                   STA  0x30
@@ -105,9 +121,11 @@ So we look at the code associated with this command, the u command is for disass
     L_D42A  29 10                   AND  #0x10
     L_D42C  F0 0F                   BEQ  L_D43D
     L_D42E  AD 4A 08                LDA  L_084A
+```
 
 This shows that starting from the address L_D97B is a jump table, we can view the contents of the table
 
+``` terminal
     QL6502> d 0xd97b
     Scale -   0  1  2  3  4  5  6  7 -  8  9  a  b  c  d  e  f   0123456789ABCDEF
 
@@ -119,23 +137,31 @@ This shows that starting from the address L_D97B is a jump table, we can view th
     00D9C0:  20 A3 C5 20 E8 D2 20 7C - 79 20 72 59 20 90 5A A5    .. .. |y rY .Z.
     00D9D0:  75 29 80 09 11 85 75 A9 - 00 85 C7 85 70 85 73 85   u)....u.....p.s.
     00D9E0:  76 8D BF 03 A2 0C 20 20 - CC A2 00 20 20 CC 20 D4   v.....  ...  . .
+```
 
 After analysis the whole program, we see that the contents from 0xd97b to 0xd9b6 is jump instruction table, so we use the j command (Jump Table) command to tell the QL6502 jump table
 
-    QL6502> j 0xd97b 0xd9b6
+``` terminal
+QL6502> j 0xd97b 0xd9b6
+```
 
 Then analyze again
 
+``` terminal
     QL6502> x
     1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
     Ok.
+```
 
 This time the analyseser did not encounter indirect jump instruction that indicating the static analysis of the entire program is completed, we can generate disassembled code files:
 
-    QL6502> g dt512.asm 0 0x0xffff
+``` terminal
+QL6502> g dt512.asm 0 0x0xffff
+```
 
 Please note that the invalid area has been identified by above B command. The document we generated looks like this in any pure text editor
 
+```
     L_4D1B: DB  0x20,0x21,0xF0,0xA6,0x9C,0xB5,0x80,0x29     ; .!.....)
     L_4D23: DB  0x0F,0xC9,0x07,0xA9,0x31,0x8D,0x66,0x10     ; ....1.f.
     L_4D2B: DB  0xA9,0x01,0x85,0xA1,0x60                    ; ....`
@@ -161,6 +187,7 @@ Please note that the invalid area has been identified by above B command. The do
     L_4D5C  ADC  #0x00
     L_4D5E  STA  L_0731
     L_4D61: RTS
+```
 
 The data is identified by DB, and the subroutine entry is indentified by a marker ';Subrutine ..........'. A local jump entry will be represented like L_4D3C: (with one colon) and L_4D51 (without a colon) means CPU address 0x4D51.
 
@@ -168,7 +195,8 @@ The data is identified by DB, and the subroutine entry is indentified by a marke
 
 We can use QL6502 compiling a single source file. But for a project composed of multiple source files, the most convenient way is to define a project management file, such as the ABC.MAK file, it cantains:
 
-   -OOUT512.bin
+``` terminal
+    -OOUT512.bin
     -LIN512.bin
     A.ASM
     B.ASM
@@ -176,15 +204,19 @@ We can use QL6502 compiling a single source file. But for a project composed of 
     D.ASM
     X.ASM
     ……
+```
 
 Each text line corresponds to a description of the project, -OOUT512.bin output ROM image file name, -LIN512.bin input image file name. * .ASM for each source file, you need to be listed all source files one by one.
 
 We use the following command to automatically complete the assembly of the entire project
 
-    QL6502 ABC.MAK
+``` terminal
+QL6502 ABC.MAK
+```
 
 The QL6502 will load IN512.bin and assemble the source files to form the output file OUT512.bin. Here is an example of the actual work
 
+``` terminal
     D:\QL6502\Testcase>..\obj\ql6502 DZZB.MAK
     CA6502 V4.0 An Assembly Development Tool for 6502
     fortchina@163.com, 2017.07 - 2017.07, ALL RIGHTS RESERVED
@@ -194,13 +226,14 @@ The QL6502 will load IN512.bin and assemble the source files to form the output 
     Load file : IN512.bin
     Write File : OUT512.bin
     Total 2404 Lines in 13 Files Built.
+```
 
 # Target Hardware Platform
 
 QL6502 does not involve a specific target hardware platform.
 
 In actual project working, we usually firstly use EEPROM programmer to read the ROM image into a file, then compiled code to generate the target image, and use the EEPROM programmer to write image into a variety of memory such as 27C64, 7527C256, 27C512 and so on. Because different hardware designers use different address mapping schemes, so the target image may need to cut and packed before burning. In the QL6502 project, we included an actual handler for its
-integrity. If we only interaested in 6502 assembler / disassembler implementation, this part can be ignored.
+integrity. If we only interaested in 6502 assembler/disassembler implementation, this part can be ignored.
 
 # Naming 
 

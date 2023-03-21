@@ -54,10 +54,20 @@
 // ************************************************************************************
 
 typedef enum {
-	T_NOP, T_IMM, T_ZER, T_ACC,
-	T_ABS, T_ZPX, T_IX, T_IY,
-	T_ABX, T_ABY, T_IMP, T_REL,
-	T_IND, T_ZPY
+	T_NOP, 
+	T_IMM, 
+	T_ZER, 
+	T_ACC,
+	T_ABS, 
+	T_ZPX, 
+	T_IX, 
+	T_IY,
+	T_ABX, 
+	T_ABY, 
+	T_IMP, 
+	T_REL,
+	T_IND, 
+	T_ZPY
 }  ADDRESS_MODE_6502;
 
 /* ............  Used For UnASMB FLAG ...........................*/
@@ -360,8 +370,7 @@ static unsigned char code_buf[CODE_MAX + 16], info_buf[CODE_MAX + 16];
 static int LCCnt, CodeCnt, jind_no;
 static CodeStruct cds;
 
-static int de_asmb(int pc, CodeStruct * dst)
-{
+static int de_asmb(int pc, CodeStruct * dst) {
 	unsigned int i, k, type;
 	char buf[40];
 
@@ -376,10 +385,11 @@ static int de_asmb(int pc, CodeStruct * dst)
 
 		case T_IMM: 
 			k = GetByte(pc);
-			if (isprint(k))    
+			if (isprint(k)) {   
 				sprintf(buf, "#0x%02X    ; %c", k, k);
-			else
+			} else {
 				sprintf(buf, "#0x%02X", k);
+			}
 			dst->len = 2;								
 			break;
 
@@ -395,10 +405,12 @@ static int de_asmb(int pc, CodeStruct * dst)
 		case T_ABS: 
 			dst->addr = k = GetWord(pc);
 			sprintf(buf, "L_%04X", k);
-			if (type & T_FLAG_ABS_ENT) 
+			if (type & T_FLAG_ABS_ENT) { 
 				dst->type = FLAG_ENT;
-			if (type & T_FLAG_ABS_SUB) 
+			}
+			if (type & T_FLAG_ABS_SUB) { 
 				dst->type = FLAG_SUB;
+			}
 			dst->len = 3;
 			break;
 
@@ -454,8 +466,9 @@ static int de_asmb(int pc, CodeStruct * dst)
 			dst->len = 2;								 
 			break;
 
-		default: printf("Internal error ...... CPU Instruction\n");
-		break;
+		default: 
+			printf("Internal error ...... CPU Instruction\n");
+			break;
 	}
 	sprintf(dst->name, "%s  %s", aux_code[i].name, buf);
 	dst->cont = (type & T_FLAG_NO_CNT) ? 0 : 1;
@@ -464,8 +477,7 @@ static int de_asmb(int pc, CodeStruct * dst)
 
 // ************************************************************************************
 
-static void help(void)
-{
+static void help(void) {
 	printf("\n      ......  COMMAND LIST TABLE      ...... \n\n");
 	printf("B[start] [end]            Blank Area             \n");
 	printf("C[T/P]   [start] [end]    Set Subroutine Table / Point\n");
@@ -485,8 +497,7 @@ static void help(void)
 }
 
 // Set CPU 6502 Entry, RESET, IRQ and NMI
-static void SetKnownEntry(void)
-{
+static void SetKnownEntry(void) {
 	unsigned int pc;
 	int 		cc;
 
@@ -504,21 +515,21 @@ static void SetKnownEntry(void)
 }
 
 // Convert XD6502 input string to number
-static int string_to_value(char * pc)
-{
+static int string_to_value(char * pc) {
 	char * tmp;
 	int	 ret_val, sign = 0;
 
 	if (*pc == '-') {
 		sign = 1;
 		pc++;
-	}
+	} 
+
 	if (*pc == '0' && (*(pc + 1) == 'X' || *(pc + 1) == 'x')) {
 		ret_val = strtol(pc + 2, &tmp, 16);
-	}
-	else {
+	} else {
 		ret_val = strtol(pc, &tmp, 10);
 	}
+
 	if (*tmp != '\0') {
 		printf("Bad number : %s\n", pc);
 		return 0;
@@ -527,8 +538,7 @@ static int string_to_value(char * pc)
 }
 
 // Set target Jump/Call Table entry
-static void SetSubEntTable(int begin, int end, int type)
-{
+static void SetSubEntTable(int begin, int end, int type) {
 	int pc, cc;
 
 	for (; begin < end; begin += 2) {
@@ -539,8 +549,7 @@ static void SetSubEntTable(int begin, int end, int type)
 }
 
 // format output text string for list 
-static void gen_list(char * buf)
-{
+static void gen_list(char * buf) {
 	unsigned int cc, i, px, prem;
 	
 	cc = GetFlag(LCCnt);
@@ -548,19 +557,15 @@ static void gen_list(char * buf)
 		de_asmb(LCCnt, &cds);
 		if (cc & FLAG_SUB) {
 			sprintf(buf, "L_%04X: %-25s;Subrutine ..........", LCCnt, cds.name);
-		}
-		else if (cc & FLAG_ENT) {
+		} else if (cc & FLAG_ENT) {
 			sprintf(buf, "L_%04X: %-25s;JMP Entry ..........", LCCnt, cds.name);
-		}
-		else if (cc & FLAG_LOC) {
+		} else if (cc & FLAG_LOC) {
 			sprintf(buf, "L_%04X: %s", LCCnt, cds.name);
-		}
-		else {
+		} else {
 			sprintf(buf, "L_%04X  %s", LCCnt, cds.name);
 		}
 		LCCnt += cds.len;
-	}
-	else {
+	} else {
 		memset(buf, ' ', 78);
 		buf[79] = '\0';
 		sprintf(buf, "L_%04X: DB  ", LCCnt);
@@ -579,8 +584,7 @@ static void gen_list(char * buf)
 }
 
 // set target code information
-static void blank_info(int argc, char * argv[])
-{
+static void blank_info(int argc, char * argv[]) {
 	int 	begin, end, cc;
 
 	if (argc == 2) {
@@ -617,8 +621,7 @@ static void zap_info(void)
 }
 
 // dump target data
-static void dump_data(int argc, char * argv[])
-{
+static void dump_data(int argc, char * argv[]) {
 	static int DataCnt;
 	unsigned char 	buf[17];
 	unsigned int 	i, m = 8, k, cc;
@@ -631,14 +634,18 @@ static void dump_data(int argc, char * argv[])
 	buf[16] = '\0';
 	for (i = 0; i < m && DataCnt < CODE_MAX; i++) {
 		printf("%06X:  ", DataCnt);
-		if ((cc = (DataCnt & 0x000f)) != 0)
+		if ((cc = (DataCnt & 0x000f)) != 0) {
 			for (k = 0; k < cc; k++) {
 				printf("   ");
 				if (k == 8) printf("  ");
 				buf[k] = ' ';
 			}
+		}
+
 		for (k = DataCnt & 0x000f; k <= 0xf; k++) {
-			if (k == 8) printf("- ");
+			if (k == 8) {
+				printf("- ");
+			}
 			cc = GetByte(DataCnt++);
 			printf("%02X ", cc);
 			buf[k] = isprint(cc) ? cc : '.';
@@ -648,8 +655,7 @@ static void dump_data(int argc, char * argv[])
 }
 
 // search bytes in target code
-static void search_data(int argc, char * argv[])
-{
+static void search_data(int argc, char * argv[]) {
 	int 	begin, end, i, k;
 	char    s_data[10];
 
@@ -664,8 +670,9 @@ static void search_data(int argc, char * argv[])
 	}
 	for (; begin + i <= end; begin++) {
 		for (k = 0; k < i; k++) {
-			if (GetByte(begin + k) != s_data[k])
+			if (GetByte(begin + k) != s_data[k]) {
 				break;
+			}
 		}
 		if (k == i) {
 			printf("L_%04X  ", begin);
@@ -675,8 +682,7 @@ static void search_data(int argc, char * argv[])
 }
 
 // scan and loop for target code
-static void do_un_asmb(void)
-{
+static void do_un_asmb(void) {
 	int cc, i;
 
 	for (cds.cont = 1; cds.cont; ) {
@@ -686,10 +692,12 @@ static void do_un_asmb(void)
 		for (LCCnt++, i = 1; i < cds.len; i++, LCCnt++) {
 			SetFlag(LCCnt, FLAG_USED);
 		}
+
 		if (cds.ind == 1) {
 			jind_no++;
 			continue;
 		}
+
 		if (cds.type) {
 			cc = GetFlag(cds.addr);
 			if (cc & FLAG_USED) {
@@ -700,14 +708,14 @@ static void do_un_asmb(void)
 }
 
 // XD6502 de-assembly
-static void un_asmb(int argc, char * argv[])
-{
+static void un_asmb(int argc, char * argv[]) {
 	int  i, k, m = 16;
 	CodeStruct 		cds;
 
 	if (argc == 1) {
 		LCCnt = string_to_value(argv[0]);
 	}
+
 	for (i = 0; i < m && LCCnt < CODE_MAX; i++) {
 		if (!de_asmb(LCCnt, &cds)) {
 			return;
@@ -716,22 +724,22 @@ static void un_asmb(int argc, char * argv[])
 		for (k = 0; k < cds.len && k < 8; k++, LCCnt++) {
 			printf("%02X ", GetByte(LCCnt));
 		}
-		for (; k < 8; k++) printf("   ");
+		for (; k < 8; k++) {
+			printf("   ");
+		}
 		printf("%s\n", cds.name);
 	}
 }
 
 // set target code JMP/JSR table
-static void set_sub_jump_entry(int argc, char * argv[], int flag)
-{
+static void set_sub_jump_entry(int argc, char * argv[], int flag) {
 	int begin, end, cc;
 
 	if (argc == 2) {
 		begin = string_to_value(argv[0]);
 		end = string_to_value(argv[1]);
 		SetSubEntTable(begin, end, flag);
-	}
-	else if (argc == 1) {
+	} else if (argc == 1) {
 		begin = string_to_value(argv[0]);
 		cc = GetFlag(begin);
 		SetFlag(begin, cc | flag);
@@ -739,8 +747,7 @@ static void set_sub_jump_entry(int argc, char * argv[], int flag)
 }
 
 // display indirect access instruction
-static void display_ind(void)
-{
+static void display_ind(void) {
 	int i, cc;
 
 	for (LCCnt = 0, i = 1; LCCnt < CODE_MAX; ) {
@@ -758,8 +765,7 @@ static void display_ind(void)
 }
 
 // code automatic analysis
-static void auto_sat(void)
-{
+static void auto_sat(void) {
 	int i, cc, work_flag = 1;
 
 	SetKnownEntry();
@@ -777,25 +783,25 @@ static void auto_sat(void)
 	}
 	if (jind_no == 0) {
 		printf("\nOk.\n");
-	}
-	else {
+	} else {
 		printf("\n%d Indirect Entries\n", jind_no);
 	}
 }
 
 
 // view code list (with formatted XD6502 text)
-static void view_list(int argc, char * argv[])
-{
+static void view_list(int argc, char * argv[]) {
 	int i, cc, m = 20, end = CODE_MAX - 1;
 	char buf[TEXT_LINE_SIZE];
 
 	if (argc >= 1) {
 		CodeCnt = string_to_value(argv[0]);
 	}
+
 	if (argc == 2) {
 		end = string_to_value(argv[2]);
 	}
+
 	for (LCCnt = CodeCnt, i = 0; i < m && LCCnt <= end; i++) {
 		while (!((cc = GetFlag(LCCnt)) & FLAG_USED)) {
 			CodeCnt++;
@@ -808,8 +814,7 @@ static void view_list(int argc, char * argv[])
 }
 
 // output analyzed code list to file
-static void gen_list_file(int argc, char * argv[])
-{
+static void gen_list_file(int argc, char * argv[]) {
 	FILE * fout;
 	int  end = CODE_MAX;
 	char buf[TEXT_LINE_SIZE];
@@ -837,8 +842,7 @@ static void gen_list_file(int argc, char * argv[])
 }
 
 // load target ROM data into XD6502 for analysis
-static void load_bin_file(int argc, char * argv[])
-{
+static void load_bin_file(int argc, char * argv[]) {
 	FILE 	* fd;
 	int  	cc, cnt = 0;
 
@@ -846,10 +850,10 @@ static void load_bin_file(int argc, char * argv[])
 		printf("Command Format: L [filename]\n");
 		return;
 	}
+
 	if ((fd = fopen(argv[0], "rb")) == NULL) {
 		printf("File Open Error : %s\n", argv[0]);
-	}
-	else {
+	} else {
 		cnt = fread((char *)code_buf, 1, CODE_MAX, fd);
 		printf("%u Bytes data read into code buffer @0x0000\n", cnt);
 		fclose(fd);
@@ -882,7 +886,9 @@ void XD6502(void) {
 			}
 			argv[i] = pc;
 			for (; * pc != ',' && * pc > ' '; pc++);
-			if (* pc) * pc++ = '\0';
+			if (* pc) {
+				* pc++ = '\0';
+			}
 		}
 		argv[i] = NULL;
 		cc = (cc >= 'a' && cc <= 'z') ? cc - 0x20 : cc;

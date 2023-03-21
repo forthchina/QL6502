@@ -154,8 +154,7 @@ static void error_proc(char * msg) {
  
 // ************************************************************************************
 
-static void gen_byte(int cc)
-{
+static void gen_byte(int cc) {
 	if (PassCnt == 2) {
 		code_buf[LCCnt] = cc;
 	}
@@ -571,25 +570,31 @@ static void scan_text_line(char * ptr) {
 		if (* ScanPtr == ':') {				// public label
 			ScanPtr ++;
 			proc_label(0);
-		}
-		else {								// local label
+		} else {							// local label
 			proc_label(1);
 		}
 	}
 
 	scan_skip_blank();
-	if (* ScanPtr == 0 || * ScanPtr == ';') 
+	if (* ScanPtr == 0 || * ScanPtr == ';') { 
 		return;
+	}
 	scan_get_word_name();	
 	scan_skip_blank();
 
-	if		(token[0] == 'D' && token[1] == 'B' && token[2] == 0) proc_db();
-	else if (token[0] == 'D' && token[1] == 'W' && token[2] == 0) proc_dw();
-	else if (token[0] == 'O' && token[1] == 'R' && token[2] == 'G' && token[3] == 0) proc_org();
-	else if (token[0] == 'E' && token[1] == 'Q' && token[2] == 'U' && token[3] == 0) proc_equ();
-	else if (token[0] == 'C' && token[1] == 'O' && token[2] == 'D' && 
-				token[3] == 'E' && token[4] == 0) proc_code();
-	else proc_6502_instruction();
+	if	(token[0] == 'D' && token[1] == 'B' && token[2] == 0) {
+		proc_db();
+	} else if (token[0] == 'D' && token[1] == 'W' && token[2] == 0) {
+		proc_dw();
+	} else if (token[0] == 'O' && token[1] == 'R' && token[2] == 'G' && token[3] == 0) {
+		proc_org();
+	} else if (token[0] == 'E' && token[1] == 'Q' && token[2] == 'U' && token[3] == 0) {
+		proc_equ();
+	} else if (token[0] == 'C' && token[1] == 'O' && token[2] == 'D' && token[3] == 'E' && token[4] == 0) {
+		proc_code();
+	} else {
+		proc_6502_instruction();
+	}
 }
 
 static void do_options(char * opt) {
@@ -605,8 +610,7 @@ static void do_options(char * opt) {
 			fread(code_buf, 1, CODE_MAX, fd);
 			fclose(fd);
 			printf("Load file : %s \n", opt);
-		}
-		else if (*opt == 'O') {
+		} else if (*opt == 'O') {
 			strcpy(output_file_name, opt + 1);
 		}
 	}
@@ -628,8 +632,7 @@ static void build_from_file(char * fname) {
 		if (working_file_name[0] > 0x20) {
 			if (working_file_name[0] == '-') {
 				do_options(&working_file_name[1]);
-			}
-			else {
+			} else {
 				FileCnt++;
 				// printf("File Count = %d, FileName %s\n", FileCnt, working_file_name);
 				if ((fd_asm = fopen(working_file_name, "rt")) == NULL) {
@@ -680,8 +683,7 @@ void Build(char * fname) {
 				fwrite(code_buf, 1, CODE_MAX, fd);
 				fclose(fd);
 				printf("Write File : %s\n", output_file_name);
-			}
-			else {
+			} else {
 				printf("Failed write to file %s.\n", output_file_name);
 			}
 		}

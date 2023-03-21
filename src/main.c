@@ -56,12 +56,14 @@ static int ql_console_handler(int arg) {
 // ************************************************************************************
 
 int main(int argc, char * argv[]) {
+
 	printf("CA6502 V4.0 An Assembly Development Tool for 6502\n");
 	printf("fortchina@163.com, 2017.07 - 2017.07, ALL RIGHTS RESERVED\n\n");
 	printf("This Program is based on CA6502 V3.0, ZhaoYu, ZhangWenCui, 1993.05 - 2004.09\n\n") ;
 
 
 #ifdef WIN32
+	setvbuf(stdout, NULL, _IONBF, 0); 
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE) ql_console_handler, TRUE);
 #else	
 	signal(SIGINT,  (void *) ql_console_handler);
@@ -72,15 +74,12 @@ int main(int argc, char * argv[]) {
 	if (argc == 2) {
 		if (strcmp(argv[1], "-X") == 0 || strcmp(argv[1], "-x") == 0) {
 			XD6502();
-		}
-		else {
+		} else {
 			Build(argv[1]);
 		}
-	}
-	else if (argc == 4) {
+	} else if (argc == 4) {
 		Pack(argv[1], argv[2], argv[3]);
-	}
-	else {
+	} else {
 		printf("Usage:  QL6502 file.mak <CR> \n");
 		printf("            Build ADT program\n\n");
 		printf("        QL6502 [opt] [src-file] [dst-file] <CR> \n");
