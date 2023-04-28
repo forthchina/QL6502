@@ -43,10 +43,6 @@
 *
 * ********************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "QL6502.h"
 
 #define BUFFER_SIZE		0x10000

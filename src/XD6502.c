@@ -43,13 +43,9 @@
 *
 * ********************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define ARGV_MAX	12
-
 #include "QL6502.h"
+
+#define ARGV_MAX 12
 
 // ************************************************************************************
 
@@ -372,7 +368,7 @@ static CodeStruct cds;
 
 static int de_asmb(int pc, CodeStruct * dst) {
 	unsigned int i, k, type;
-	char buf[40];
+    char buf[40] = { 0 };
 
 	i = GetByte(pc++);
 	type = aux_code[i].type;

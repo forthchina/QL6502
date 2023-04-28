@@ -43,10 +43,6 @@
 *
 * ********************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "QL6502.h"
 
 #define SYMB_BUF_SIZE	(128 * 1204)
@@ -212,7 +208,7 @@ static Symbol * symbol_search(char * pname) {
 }
 
 static void proc_label(int is_local) {
-	char	name[TEXT_LINE_SIZE + 4];
+    char name[TEXT_LINE_SIZE + 4] = { 0, 0, 0, 0 };
 	int 	size, h;
 	Symbol	* spc;
 
@@ -446,8 +442,10 @@ static void proc_6502_instruction(void) {
 			break;
 
 		case OPRAND_ADD | OPRAND_X:
-			if (!ipc->ix) error_proc("No this operand mode");
-			// printf("OPADDR = 0x%04X\n", op_addr);
+			if (!ipc->ix) {
+				error_proc("No this operand mode");
+			}
+			
 			if (op_addr > 0xff ) error_proc("Out of range");
 			gen_byte(ipc->ix);
 			gen_byte(op_addr);
@@ -459,7 +457,10 @@ static void proc_6502_instruction(void) {
 				gen_byte(op_addr);
 				break;
 			}
-			if (!ipc->aby) error_proc("No this operand mode");
+			if (!ipc->aby) {
+				error_proc("No this operand mode");
+			}
+
 			gen_byte(ipc->aby);
 			gen_word(op_addr);
 			break;
@@ -529,10 +530,10 @@ static void proc_equ(void) {
 	if (PassCnt == 1) {
 		if (CurrSymb == NULL) {
 			error_proc("there should be a LABEL for this EQU.");
+        } else {
+			CurrSymb->pos = expression();
+			scan_skip_blank();
 		}
-		CurrSymb->pos = expression();
-		// printf("Label %s = %d (0x%04X)\n", CurrSymb->name, val, val);
-		scan_skip_blank();
 		if (*ScanPtr != 0) {
 			error_proc("Syntax error");
 		}

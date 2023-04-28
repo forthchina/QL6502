@@ -3,6 +3,8 @@
 
 #if defined(_WIN32)					// Winodws platform
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <windows.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -10,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <setjmp.h>
+
 
 #define strupr	_strupr
 
