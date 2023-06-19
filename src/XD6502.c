@@ -85,7 +85,7 @@ typedef enum {
 #define FLAG_DO_OK      0x80
 
 typedef struct _code_stru {
-	char name[32] ;
+	char name[64] ;
   	int  len, cont, type, ind ;
   	int addr ;
 }  CodeStruct ;
@@ -463,7 +463,7 @@ static int de_asmb(int pc, CodeStruct * dst) {
 			break;
 
 		default: 
-			printf("Internal error ...... CPU Instruction\n");
+			printf("Internal Decode Error.\n");
 			break;
 	}
 	sprintf(dst->name, "%s  %s", aux_code[i].name, buf);
