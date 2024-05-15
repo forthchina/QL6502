@@ -57,8 +57,8 @@ static int ql_console_handler(int arg) {
 
 int main(int argc, char * argv[]) {
 
-	printf("CA6502 V4.0 An Assembly Development Tool for 6502\n");
-	printf("fortchina@163.com, 2017.07 - 2017.07, ALL RIGHTS RESERVED\n\n");
+	printf("QL6502 V1.0 An Assembly Development Tool for 6502\n");
+	printf("fortchina@163.com, 2017.07 - 2024.07, ALL RIGHTS RESERVED\n\n");
 	printf("This Program is based on CA6502 V3.0, ZhaoYu, ZhangWenCui, 1993.05 - 2004.09\n\n") ;
 
 

@@ -1,5 +1,1 @@
-#
-vsproject/x64
-vsproject/.vs
-*.filters
-*.user
+build/
