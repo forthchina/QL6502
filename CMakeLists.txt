@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.10)
 
 project(QL6502 LANGUAGES C)
 
@@ -14,5 +14,7 @@ target_sources(ql6502 PRIVATE
 
 # target_link_libraries(ql6502 PRIVATE "${USB_LIBRARY_PATH}/libusb-1.0.a")
 
-add_custom_command(TARGET ql6502 POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ql6502.exe "${PROJECT_SOURCE_DIR}/example")
+IF (CMAKE_SYSTEM_NAME MATCHES "Windows") 
+    add_custom_command(TARGET ql6502 POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ql6502.exe "${PROJECT_SOURCE_DIR}/example")
+ENDIF (CMAKE_SYSTEM_NAME MATCHES "Windows") 
